@@ -17,42 +17,45 @@ http.createServer((req, res) => {
         req.on('end', () => {
             let payload = JSON.parse(body);
             console.log(`--- ${payload.repository.url} ---`);
-            //* linux系统
-            const sh = spawn('sh', [`./sh/${payload.repository.name}.sh`]);
+            //* linux和macOS
+            if (process.platform === 'linux' || process.platform === 'darwin') {
+                const sh = spawn('sh', [`./sh/${payload.repository.name}.sh`]);
 
-            sh.stdout.on('data', (data) => {
-                console.log(`stdout: ${data}`);
-            });
-            sh.stdout.on('end', () => {
-                console.log('Mission Complete!')
-            });
+                sh.stdout.on('data', (data) => {
+                    console.log(`stdout: ${data}`);
+                });
+                sh.stdout.on('end', () => {
+                    console.log('Mission Complete!')
+                });
 
-            sh.stderr.on('data', (data) => {
-                console.error(`stderr: ${data}`);
-            });
+                sh.stderr.on('data', (data) => {
+                    console.error(`stderr: ${data}`);
+                });
 
-            sh.on('close', (code) => {
-                console.log(`child process exited with code ${code}`);
-            });
+                sh.on('close', (code) => {
+                    console.log(`child process exited with code ${code}`);
+                });
+            }
+            //* windows系统
+            if (process.platform === 'win32') {
+                const bat = spawn('cmd.exe', ['/c', `bat\\${payload.repository.name}.cmd`]);
 
-            /* windows系统
-            const bat = spawn('cmd.exe', ['/c', `bat\\${payload.repository.name}.cmd`]);
+                bat.stdout.on('data', (data) => {
+                    console.log(data.toString());
+                });
+                bat.stdout.on('end', () => {
+                    console.log('Mission Complete!')
+                });
 
-            bat.stdout.on('data', (data) => {
-                console.log(data.toString());
-            });
-            bat.stdout.on('end', () => {
-                console.log('Mission Complete!')
-            });
+                bat.stderr.on('data', (data) => {
+                    console.error(data.toString());
+                });
 
-            bat.stderr.on('data', (data) => {
-                console.error(data.toString());
-            });
+                bat.on('exit', (code) => {
+                    console.log(`Child exited with code ${code}`);
+                });
+            }
 
-            bat.on('exit', (code) => {
-                console.log(`Child exited with code ${code}`);
-            });
-            */
             // response
             let json = JSON.stringify({
                 status: "success",
