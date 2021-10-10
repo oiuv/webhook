@@ -11,7 +11,7 @@ http.createServer((req, res) => {
         // 获取body
         let body;
         req.on('data', (data) => {
-            console.log(`--- data: ${data} ---`);
+            // console.log(`--- data: ${data} ---`);
             body = data;
         });
         req.on('end', () => {
