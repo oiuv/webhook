@@ -1,3 +1,3 @@
 #!/bin/bash
 
-cd .. && git pull
+cd ~/Code/oiuv/webhook && git pull
