@@ -9,10 +9,10 @@ http.createServer((req, res) => {
     // request
     if (req.method === 'POST') {
         // 获取body
-        let body;
+        let body = '';
         req.on('data', (data) => {
             // console.log(`--- data: ${data} ---`);
-            body = data;
+            body += data;
         });
         req.on('end', () => {
             let payload = JSON.parse(body);
